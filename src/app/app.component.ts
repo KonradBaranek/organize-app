@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +6,31 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'organize-app';
+  @ViewChild('videoElement') videoElement: any;  
+  video: any;
+
+  ngAfterViewInit() {
+    this.video = this.videoElement.nativeElement;
+  }
+
+  start() {
+    this.initCamera({ video: true, audio: false });
+  }
+   sound() {
+    this.initCamera({ video: true, audio: true });
+  }
+  
+    initCamera(config:any) {
+    var browser = <any>navigator;
+
+    browser.getUserMedia = (browser.getUserMedia ||
+      browser.webkitGetUserMedia ||
+      browser.mozGetUserMedia ||
+      browser.msGetUserMedia);
+ 
+    browser.mediaDevices.getUserMedia(config).then((stream : any) => {
+      this.video.src = stream;
+      this.video.play();
+    });
+  }
 }
